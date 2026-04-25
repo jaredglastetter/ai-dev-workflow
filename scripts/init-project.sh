@@ -53,6 +53,39 @@ git init
 git checkout -b main
 npm install
 
+# ── Create GitHub repo and push ───────────────────────────────────────────────
 echo ""
-echo "==> Project '$NAME' ready!"
-echo "    cd $NAME && npm run dev"
+echo "==> Creating GitHub repo: $NAME"
+gh repo create "$NAME" --public --source=. --push
+GITHUB_OWNER=$(gh api user --jq .login)
+REPO_FULL="$GITHUB_OWNER/$NAME"
+
+# ── Copy secrets to new repo ──────────────────────────────────────────────────
+echo ""
+echo "==> Copying secrets to $REPO_FULL"
+
+copy_secret() {
+  local KEY=$1
+  local VAL=${!KEY}
+  if [ -n "$VAL" ]; then
+    gh secret set "$KEY" --body "$VAL" --repo "$REPO_FULL"
+    echo "    ✓ $KEY"
+  else
+    echo "    ~ $KEY not set in environment, skipping"
+  fi
+}
+
+copy_secret VERCEL_TOKEN
+copy_secret VERCEL_ORG_ID
+copy_secret VERCEL_PROJECT_ID
+copy_secret RENDER_DEPLOY_HOOK_URL
+
+echo ""
+echo "======================================"
+echo " Project '$NAME' ready!"
+echo "======================================"
+echo ""
+echo "  GitHub : https://github.com/$REPO_FULL"
+echo "  Codespaces: github.com/$REPO_FULL → Code → Codespaces → New"
+echo ""
+echo "  Or run locally: npm run dev"
