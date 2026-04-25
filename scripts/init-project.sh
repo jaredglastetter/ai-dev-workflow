@@ -111,6 +111,7 @@ copy_secret VERCEL_TOKEN
 copy_secret VERCEL_ORG_ID
 copy_secret VERCEL_PROJECT_ID
 copy_secret RENDER_DEPLOY_HOOK_URL
+copy_secret ANTHROPIC_API_KEY
 
 echo ""
 echo "======================================"

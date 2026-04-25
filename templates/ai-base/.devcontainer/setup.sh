@@ -21,4 +21,8 @@ if grep -q "playwright" package.json 2>/dev/null; then
   npx playwright install --with-deps
 fi
 
+# Install Claude Code CLI
+echo "==> Installing Claude Code"
+npm install -g @anthropic-ai/claude-code
+
 echo "==> Setup complete. Run: npm run dev"

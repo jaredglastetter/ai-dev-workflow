@@ -97,6 +97,24 @@ if grep -q "\"playwright\"" package.json 2>/dev/null; then
   echo "    ✓ Playwright ready"
 fi
 
+# ── Claude Code auth ─────────────────────────────────────────────────────────
+echo ""
+echo "==> Checking Claude Code auth"
+if ! command -v claude &>/dev/null; then
+  echo "    Installing Claude Code..."
+  npm install -g @anthropic-ai/claude-code -q
+fi
+
+if [ -n "$ANTHROPIC_API_KEY" ]; then
+  echo "    ✓ ANTHROPIC_API_KEY set — Claude Code will use it automatically"
+elif claude config get api_key &>/dev/null 2>&1; then
+  echo "    ✓ Already authenticated"
+else
+  echo "    ~ Not authenticated. Choose one:"
+  echo "      1. Add ANTHROPIC_API_KEY to Codespaces secrets (recommended for automation)"
+  echo "      2. Run manually: claude login (opens browser, uses Claude.ai subscription)"
+fi
+
 # ── Vercel setup ─────────────────────────────────────────────────────────────
 echo ""
 echo "==> Checking Vercel"
