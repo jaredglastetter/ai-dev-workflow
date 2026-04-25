@@ -88,6 +88,7 @@ grant_codespaces_secret() {
   fi
 }
 
+grant_codespaces_secret GH_PAT
 grant_codespaces_secret VERCEL_TOKEN
 grant_codespaces_secret ANTHROPIC_API_KEY
 

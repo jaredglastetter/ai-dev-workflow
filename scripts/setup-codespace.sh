@@ -14,15 +14,21 @@ echo "==> Checking GitHub CLI auth"
 if gh auth status &>/dev/null; then
   echo "    ✓ Already authenticated as $(gh api user --jq .login)"
 else
-  if [ -n "$GITHUB_TOKEN" ]; then
-    # Codespaces provides this automatically
+  if [ -n "$GH_PAT" ]; then
+    # PAT with full scopes (repo + workflow + codespace) — preferred
+    echo "$GH_PAT" | gh auth login --with-token
+    echo "    ✓ Authenticated via GH_PAT"
+  elif [ -n "$GITHUB_TOKEN" ]; then
+    # Codespaces auto-token — limited scopes, gh repo create will fail
     echo "$GITHUB_TOKEN" | gh auth login --with-token
-    echo "    ✓ Authenticated via GITHUB_TOKEN"
+    echo "    ~ Authenticated via GITHUB_TOKEN (limited scopes)"
+    echo "      To enable full workflow, add GH_PAT to Codespaces secrets:"
+    echo "      github.com/settings/tokens → classic → repo + workflow + codespace"
   else
-    echo "    Paste a GitHub personal access token (needs repo + workflow scopes):"
-    echo "    Generate one at: https://github.com/settings/tokens/new"
-    gh auth login --hostname github.com --git-protocol https --web 2>/dev/null || \
-    read -rsp "    Token: " token && echo "$token" | gh auth login --with-token
+    echo "    No token found. Generate a PAT at: https://github.com/settings/tokens/new"
+    read -rsp "    Paste token: " token
+    echo ""
+    echo "$token" | gh auth login --with-token
     echo "    ✓ Authenticated"
   fi
 fi
