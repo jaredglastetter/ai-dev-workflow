@@ -76,16 +76,37 @@ else
   echo "    ~ No requirements.txt found, skipping"
 fi
 
-# ── Copy .env files ──────────────────────────────────────────────────────────
+# ── .env files — populate from Codespaces secrets ────────────────────────────
 echo ""
 echo "==> Setting up .env files"
 for example in $(find . -name ".env.example" -not -path "*/node_modules/*"); do
   target="${example%.example}"
+  # Create .env if missing
   if [ ! -f "$target" ]; then
     cp "$example" "$target"
-    echo "    + $target (copied from $example)"
-  else
-    echo "    ~ $target already exists"
+    echo "    + $target"
+  fi
+  # Populate values from environment (Codespaces secrets land as env vars)
+  populated=0
+  missing=()
+  while IFS= read -r line; do
+    # Skip comments and blank lines
+    [[ "$line" =~ ^#.*$ || -z "$line" ]] && continue
+    KEY="${line%%=*}"
+    CURRENT_VAL="${line#*=}"
+    ENV_VAL="${!KEY}"
+    if [ -n "$ENV_VAL" ] && [ -z "$CURRENT_VAL" ]; then
+      # Key exists in env and is empty in file — populate it
+      sed -i "s|^$KEY=.*|$KEY=$ENV_VAL|" "$target"
+      populated=$((populated + 1))
+    elif [ -z "$ENV_VAL" ] && [ -z "$CURRENT_VAL" ]; then
+      missing+=("$KEY")
+    fi
+  done < "$example"
+  [ $populated -gt 0 ] && echo "    ✓ $target — $populated var(s) populated from Codespaces secrets"
+  if [ ${#missing[@]} -gt 0 ]; then
+    echo "    ~ $target — missing values (add as Codespaces secrets or fill manually):"
+    for k in "${missing[@]}"; do echo "        $k"; done
   fi
 done
 

@@ -13,7 +13,7 @@ When the user says any of the following, translate it directly to the correspond
 | "create a python app called X" | `bash scripts/init-project.sh python X` |
 | "create a react+node app called X" | `bash scripts/init-project.sh react-node X` |
 | "create a react+python app called X" | `bash scripts/init-project.sh react-python X` |
-| "apply base to this repo" | `bash scripts/apply-base.sh` |
+| "apply this workflow to this repo" / "set up this repo" | `bash scripts/apply-base.sh` then fill in `CLAUDE.md` stack section |
 | "add react" | `cp -r templates/ai-react frontend/` |
 | "add node" | `cp -r templates/ai-node backend/` |
 | "add python" | `cp -r templates/ai-python api/` |
