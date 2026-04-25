@@ -8,10 +8,21 @@ NAME=${2:-my-app}
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TEMPLATES_DIR="$SCRIPT_DIR/../templates"
 
-echo "==> Initializing $TYPE project: $NAME"
+# Always create projects outside the workflow repo, in ~/projects/
+PROJECTS_DIR="${PROJECTS_DIR:-$HOME/projects}"
+mkdir -p "$PROJECTS_DIR"
+PROJECT_PATH="$PROJECTS_DIR/$NAME"
 
-mkdir -p "$NAME"
-cd "$NAME"
+echo "==> Initializing $TYPE project: $NAME"
+echo "    Location: $PROJECT_PATH"
+
+if [ -d "$PROJECT_PATH" ]; then
+  echo "ERROR: $PROJECT_PATH already exists. Choose a different name."
+  exit 1
+fi
+
+mkdir -p "$PROJECT_PATH"
+cd "$PROJECT_PATH"
 
 # Apply base
 cp -r "$TEMPLATES_DIR/ai-base/." .

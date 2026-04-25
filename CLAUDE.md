@@ -20,10 +20,10 @@ When the user says any of the following, translate it directly to the correspond
 | "prepare a PR" / "open a PR" | `bash scripts/prepare-pr.sh` |
 | "set up this codespace" | `bash scripts/setup-codespace.sh` |
 
-After running `init-project.sh`, always:
-1. `cd <app-name>`
-2. `gh repo create <app-name> --public --source=. --push`
-3. Tell the user the GitHub URL and that they can open it in Codespaces
+After running `init-project.sh`, the script handles git and GitHub automatically. Always:
+1. Tell the user the GitHub URL that was printed
+2. Tell them to open the new repo in its own Codespace (not this one)
+3. Note: projects are created in `~/projects/<name>` — never inside the ai-dev-workflow repo
 
 ## Rules (always follow these)
 
