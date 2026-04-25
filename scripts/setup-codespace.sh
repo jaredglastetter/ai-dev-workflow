@@ -107,12 +107,19 @@ fi
 
 if [ -n "$ANTHROPIC_API_KEY" ]; then
   echo "    ✓ ANTHROPIC_API_KEY set — Claude Code will use it automatically"
-elif claude config get api_key &>/dev/null 2>&1; then
-  echo "    ✓ Already authenticated"
+elif [ -f "$HOME/.claude/.credentials.json" ] || [ -f "$HOME/.claude/config.json" ]; then
+  echo "    ✓ Claude subscription auth found (restored from dotfiles)"
 else
-  echo "    ~ Not authenticated. Choose one:"
-  echo "      1. Add ANTHROPIC_API_KEY to Codespaces secrets (recommended for automation)"
-  echo "      2. Run manually: claude login (opens browser, uses Claude.ai subscription)"
+  echo ""
+  echo "    ┌─────────────────────────────────────────────┐"
+  echo "    │  Run this to auth Claude Code:              │"
+  echo "    │                                             │"
+  echo "    │    claude login                             │"
+  echo "    │                                             │"
+  echo "    │  Then save auth to your dotfiles repo so    │"
+  echo "    │  future Codespaces auth automatically.      │"
+  echo "    │  See: AI_WORKFLOW.md → Claude Auth          │"
+  echo "    └─────────────────────────────────────────────┘"
 fi
 
 # ── Vercel setup ─────────────────────────────────────────────────────────────
