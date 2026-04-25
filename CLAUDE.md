@@ -13,7 +13,7 @@ When the user says any of the following, translate it directly to the correspond
 | "create a python app called X" | `bash scripts/init-project.sh python X` |
 | "create a react+node app called X" | `bash scripts/init-project.sh react-node X` |
 | "create a react+python app called X" | `bash scripts/init-project.sh react-python X` |
-| "apply this workflow to this repo" / "set up this repo" | `bash scripts/apply-base.sh` then fill in `CLAUDE.md` stack section |
+| "set up \<repo\> for ai workflow" / "apply workflow to \<repo\>" | Run full setup — see **Existing Repo Setup** below |
 | "add react" | `cp -r templates/ai-react frontend/` |
 | "add node" | `cp -r templates/ai-node backend/` |
 | "add python" | `cp -r templates/ai-python api/` |
@@ -24,6 +24,28 @@ After running `init-project.sh`, the script handles git and GitHub automatically
 1. Tell the user the GitHub URL that was printed
 2. Tell them to open the new repo in its own Codespace (not this one)
 3. Note: projects are created in `~/projects/<name>` — never inside the ai-dev-workflow repo
+
+## Existing Repo Setup
+
+When the user says "set up X for ai workflow" or "apply workflow to X":
+
+1. Extract the repo name/owner from what the user said (e.g. `jaredglastetter/my-app`)
+2. Run: `bash scripts/setup-existing-repo.sh <owner/repo>`
+3. `cd` into the project path printed at the end (`READY_FOR_CLAUDE_ANALYSIS:<path>`)
+4. **Analyze the repo** — read `package.json`, source files, folder structure, existing README
+5. **Write a `CLAUDE.md`** tailored to this specific project including:
+   - Actual stack (what frameworks, languages, tools are used)
+   - Actual commands from `package.json` scripts
+   - Actual file structure
+   - Any missing `dev/build/test/lint` scripts that need to be added
+   - The standard agent rules
+6. If any standard scripts (`dev`, `build`, `test`, `lint`) are missing from `package.json`, add them
+7. Run: `bash scripts/prepare-pr.sh "setup: add ai-dev-workflow"`
+8. Report the PR URL to the user
+
+Do not ask the user to fill anything in — figure it out from the code.
+
+---
 
 ## Rules (always follow these)
 
