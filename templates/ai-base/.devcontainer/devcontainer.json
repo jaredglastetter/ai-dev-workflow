@@ -1,0 +1,32 @@
+{
+  "name": "AI Dev Environment",
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": { "version": "lts" },
+    "ghcr.io/devcontainers/features/python:1": { "version": "3.11" },
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  "postCreateCommand": "bash .devcontainer/setup.sh && bash scripts/setup-codespace.sh",
+  "forwardPorts": [3000, 4000, 8000],
+  "portsAttributes": {
+    "3000": { "label": "Frontend", "onAutoForward": "openPreview" },
+    "4000": { "label": "Node API", "onAutoForward": "notify" },
+    "8000": { "label": "Python API", "onAutoForward": "notify" }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "ms-python.python",
+        "ms-python.black-formatter",
+        "github.copilot"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "[python]": { "editor.defaultFormatter": "ms-python.black-formatter" }
+      }
+    }
+  }
+}

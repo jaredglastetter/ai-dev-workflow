@@ -1,0 +1,11 @@
+{
+  "name": "ai-dev-workflow",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Modular template system for AI-assisted remote development",
+  "scripts": {
+    "init": "bash scripts/init-project.sh",
+    "apply-base": "bash scripts/apply-base.sh",
+    "prepare-pr": "bash scripts/prepare-pr.sh"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "name": "ai-project",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "echo \"No dev script configured\" && exit 1",
+    "build": "echo \"No build script configured\" && exit 0",
+    "test": "echo \"No tests configured\" && exit 0",
+    "lint": "echo \"No lint configured\" && exit 0"
+  }
+}
