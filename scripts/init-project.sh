@@ -60,9 +60,29 @@ gh repo create "$NAME" --public --source=. --push
 GITHUB_OWNER=$(gh api user --jq .login)
 REPO_FULL="$GITHUB_OWNER/$NAME"
 
-# ── Copy secrets to new repo ──────────────────────────────────────────────────
+# ── Grant Codespaces secret access to new repo ───────────────────────────────
 echo ""
-echo "==> Copying secrets to $REPO_FULL"
+echo "==> Granting Codespaces secret access"
+REPO_ID=$(gh api "repos/$REPO_FULL" --jq .id)
+
+grant_codespaces_secret() {
+  local KEY=$1
+  # Check if secret exists for this user first
+  if gh api "user/codespaces/secrets/$KEY" &>/dev/null; then
+    gh api --method PUT "user/codespaces/secrets/$KEY/repositories/$REPO_ID" && \
+      echo "    ✓ $KEY → added to Codespaces access" || \
+      echo "    ~ $KEY → could not grant access (may need manual add)"
+  else
+    echo "    ~ $KEY not found in Codespaces secrets, skipping"
+  fi
+}
+
+grant_codespaces_secret VERCEL_TOKEN
+grant_codespaces_secret ANTHROPIC_API_KEY
+
+# ── Copy secrets to new repo Actions ─────────────────────────────────────────
+echo ""
+echo "==> Copying secrets to $REPO_FULL Actions"
 
 copy_secret() {
   local KEY=$1
